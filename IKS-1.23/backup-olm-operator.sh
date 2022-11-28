@@ -52,11 +52,11 @@ ${KUBECTL} get clusterrole aggregate-olm-view \
            -o=yaml > ${BACKUPDIR}/aggregate-olm-view.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get deploy catalog-operator \
+${KUBECTL} get deploy catalog-operator -n ibm-system \
            -o=yaml > ${BACKUPDIR}/catalog-operator.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get deploy olm-operator \
+${KUBECTL} get deploy olm-operator -n ibm-system \
            -o=yaml > ${BACKUPDIR}/olm-operator.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
@@ -64,7 +64,7 @@ ${KUBECTL} get clusterrole system:controller:operator-lifecycle-manager \
            -o=yaml > ${BACKUPDIR}/system-controller-operator-lifecycle-manager.yml  2>> ${BACKUPLOG} 
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get serviceaccount olm-operator-serviceaccount \
+${KUBECTL} get serviceaccount olm-operator-serviceaccount -n ibm-system  \
            -o=yaml > ${BACKUPDIR}/olm-operator-serviceaccount.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
@@ -72,19 +72,19 @@ ${KUBECTL} get clusterrolebinding olm-operator-binding-ibm-system \
            -o=yaml > ${BACKUPDIR}/olm-operator-binding-ibm-system.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get operatorgroup ibm-operators \
+${KUBECTL} get operatorgroup ibm-operators -n ibm-operators   \
            -o=yaml > ${BACKUPDIR}/ibm-operators.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get operatorgroup olm-operators \
+${KUBECTL} get operatorgroup olm-operators -n ibm-system \
            -o=yaml >  ${BACKUPDIR}/olm-operators.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get service catalog-operator-metrics \
+${KUBECTL} get service catalog-operator-metrics -n ibm-system \
            -o=yaml >  ${BACKUPDIR}/catalog-operator-metrics.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get service olm-operator-metrics \
+${KUBECTL} get service olm-operator-metrics -n ibm-system \
            -o=yaml >  ${BACKUPDIR}/olm-operator-metrics.yml  2>> ${BACKUPLOG}
 }
 
