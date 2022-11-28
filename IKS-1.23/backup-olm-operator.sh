@@ -115,6 +115,13 @@ ${KUBECTL} get subscriptions.operators.coreos.com -A \
 }
 
 #############################MAIN########################
+
+echo "#########################################################"
+echo "#                                                       #"
+echo "#          Backup IBM IKS OLM Operator Objects          #"
+echo "#                                                       #"
+echo "#########################################################"
+
 if [ ${AGENT_OS} != "Linux" ]; then
  echo "ERROR : Execution on Linux Only"
   exit 1
