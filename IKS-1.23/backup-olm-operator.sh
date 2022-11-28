@@ -76,8 +76,8 @@ ${KUBECTL} get operatorgroup ibm-operators -n ibm-operators   \
            -o=yaml > ${BACKUPDIR}/ibm-operators.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get operatorgroup olm-operatorgroup-operators -n ibm-system \
-           -o=yaml >  ${BACKUPDIR}/olm-operators.yml  2>> ${BACKUPLOG}
+${KUBECTL} get operatorgroup olm-operators -n ibm-system \
+           -o=yaml >  ${BACKUPDIR}/olm-operatorgroup-operators.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
 ${KUBECTL} get service catalog-operator-metrics -n ibm-system \
