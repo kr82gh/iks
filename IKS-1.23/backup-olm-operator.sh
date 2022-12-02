@@ -1,10 +1,11 @@
 #!/bin/bash
-AGENT_OS=`uname`
-KUBECTL=`which kubectl`
-LOGDATE=`date +%F%t%T | sed 's/:/-/g' | awk '{print $1"-"$2}'`
-BACKUPLOG="backup-olm-${LOGDATE}.log"
-BACKUPDIR="backups-${LOGDATE}"
-############################
+#######################################################################################################################
+AGENT_OS=`uname`                                                                                                      #
+KUBECTL=`which kubectl`                                                                                               #
+LOGDATE=`date +%F%t%T | sed 's/:/-/g' | awk '{print $1"-"$2}'`                                                        #
+BACKUPLOG="backup-olm-${LOGDATE}.log"                                                                                 #
+BACKUPDIR="backups-${LOGDATE}"                                                                                        #
+#######################################################################################################################
 
 function GetOLMOperator {
 ${KUBECTL} get deploy olm-operator -n ibm-system  -o=yaml  > ${BACKUPDIR}/olm-operator-deployment.yml  2>> ${BACKUPLOG} 
@@ -29,7 +30,8 @@ function GetOLMAddons {
 echo "DEBUG : Running - 'ibmcloud ks cluster addons -c ${CLUSTERID} | grep -v NAME | wc -l' "
 # Check for Rancher local dev
 if [ ${K8SENV} != "Rancher" ]; then
-KSCOUNT=`ibmcloud ks cluster addons -c ${CLUSTERID} | grep -A 1  NAME  | wc -l`
+ibmcloud ks cluster addons -c ${CLUSTERID} > ${BACKUPDIR}/${CLUSTERID}-addons.txt
+KSCOUNT=`grep -A 1  Name ${BACKUPDIR}/${CLUSTERID}-addons.txt| wc -l`
  else
 KSCOUNT="0"
 fi 
@@ -114,7 +116,7 @@ ${KUBECTL} get subscriptions.operators.coreos.com -A \
             -o=yaml >  ${BACKUPDIR}/subscriptions-operators-coreos-com.yml  2>> ${BACKUPLOG}    
 }
 
-#############################MAIN########################
+################################################# MAIN #######################################################
 
 echo "#########################################################"
 echo "#                                                       #"
