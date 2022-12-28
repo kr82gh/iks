@@ -1,10 +1,11 @@
 #!/bin/bash
-AGENT_OS=`uname`
-KUBECTL=`which kubectl`
-LOGDATE=`date +%F%t%T | sed 's/:/-/g' | awk '{print $1"-"$2}'`
-BACKUPLOG="backup-olm-${LOGDATE}.log"
-BACKUPDIR="backups-${LOGDATE}"
-############################
+#######################################################################################################################
+AGENT_OS=`uname`                                                                                                      #
+KUBECTL=`which kubectl`                                                                                               #
+LOGDATE=`date +%F%t%T | sed 's/:/-/g' | awk '{print $1"-"$2}'`                                                        #
+BACKUPLOG="backup-olm-${LOGDATE}.log"                                                                                 #
+BACKUPDIR="backups-${LOGDATE}"                                                                                        #
+#######################################################################################################################
 
 function GetOLMOperator {
 ${KUBECTL} get deploy olm-operator -n ibm-system  -o=yaml  > ${BACKUPDIR}/olm-operator-deployment.yml  2>> ${BACKUPLOG} 
@@ -19,17 +20,37 @@ fi
 
 
 function GetOLMDeployedAddons {
-KSOLMCOUNT=`${KUBECTL} get clusterserviceversions.operators.coreos.com -A  | grep -v  VERSION  | wc -l`
+echo "INFO : Checking if Addons were installed via OLM on ${CLUSTERID} in NS ibm-system"
+${KUBECTL} get clusterserviceversions.operators.coreos.com -A > ${BACKUPDIR}/${CLUSTERID}addons-olm-managed.txt 2>&1 
+
+if [ -f ${BACKUPDIR}/${CLUSTERID}addons-olm-managed.txt ]; then
+   echo "DEBUG : ${BACKUPDIR}/${CLUSTERID}addons-olm-managed.txt exists" >> ${BACKUPLOG} 2>&1 
+  else
+   echo "ERROR : ${BACKUPDIR}/${CLUSTERID}addons-olm-managed.txt DOES NOT EXIST !" 
+ exit 1
+fi
+
+KSOLMCOUNT=`egrep -v 'No resources found' ${BACKUPDIR}/${CLUSTERID}addons-olm-managed.txt  | wc -l`
 if [ ${KSOLMCOUNT} != "0" ]; then
- echo "WARN : Cluster addons installed via OLM in ${CLUSTERID} in NS ibm-system"
+ echo "ERROR : Cluster addons installed via OLM on${CLUSTERID} in NS ibm-system"
+ exit 1
+ else 
+ echo "INFO: Cluster addons NOT installed via OLM on ${CLUSTERID} in NS ibm-system"
 fi
 }
 
 function GetOLMAddons {
-echo "DEBUG : Running - 'ibmcloud ks cluster addons -c ${CLUSTERID} | grep -v NAME | wc -l' "
 # Check for Rancher local dev
 if [ ${K8SENV} != "Rancher" ]; then
-KSCOUNT=`ibmcloud ks cluster addons -c ${CLUSTERID} | grep -A 1  NAME  | wc -l`
+echo "DEBUG : Running - 'grep -A 1  Name ${BACKUPDIR}/${CLUSTERID}-addons.txt| egrep '^Name.*' |  wc -l' >> ${BACKUPLOG} 2>&1" 
+ibmcloud ks cluster addons -c ${CLUSTERID} > ${BACKUPDIR}/${CLUSTERID}-addons.txt
+if [ -f ${BACKUPDIR}/${CLUSTERID}-addons.txt ]; then
+   echo "DEBUG : ${BACKUPDIR}/${CLUSTERID}-addons.txt exists" >> ${BACKUPLOG} 2>&1 
+  else
+   echo "ERROR : ${BACKUPDIR}/${CLUSTERID}-addons.txt DOES NOT EXIST !" 
+ exit 1
+fi
+KSCOUNT=`grep -A 1  Name ${BACKUPDIR}/${CLUSTERID}-addons.txt| egrep '^Name.*' |  wc -l`
  else
 KSCOUNT="0"
 fi 
@@ -114,7 +135,7 @@ ${KUBECTL} get subscriptions.operators.coreos.com -A \
             -o=yaml >  ${BACKUPDIR}/subscriptions-operators-coreos-com.yml  2>> ${BACKUPLOG}    
 }
 
-#############################MAIN########################
+################################################# MAIN #######################################################
 
 echo "#########################################################"
 echo "#                                                       #"
@@ -158,7 +179,7 @@ if [ $? != "0" ]; then
  echo "ERROR : Failed to backup OLM objects" 
   exit 1
 fi
-echo "BackupOLM -----------> Step 4 : If you determined that OLM is not used by the Istio add-on or any additional operators, delete any unused custom resource definitions (CRD) that were installed by OLM."
+echo "BackupCRD ----------------> Step 4 : If you determined that OLM is not used by the Istio add-on or any additional operators, delete any unused custom resource definitions (CRD) that were installed by OLM."
 BackupCRD
 sleep 10
 if [ $? != "0" ]; then
