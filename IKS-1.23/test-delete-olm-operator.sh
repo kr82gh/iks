@@ -66,49 +66,49 @@ fi
 
 function OutputCRDdetails {
  CNTCATALOGSRC=`cat ${BACKUPDIR}/catalogsources-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTCATALOGSRC} = '1' ]; then
+ if [ ${CNTCATALOGSRC} != '1' ]; then
  echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
   else 
  echo "INFO : CRD catalogsources.operators.coreos.com not in use"
  fi
  
  CNTSRVCVER=`cat ${BACKUPDIR}/clusterserviceversions-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTSRVCVER} = '1' ]; then
+ if [ ${CNTSRVCVER} != '1' ]; then
  echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
   else 
  echo "INFO : CRD catalogsources.operators.coreos.com not in use"
  fi
  
  CNTINSTALLPLN=`cat ${BACKUPDIR}/installplans-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTINSTALLPLN} = '1' ]; then
+ if [ ${CNTINSTALLPLN} != '1' ]; then
  echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
   else 
  echo "INFO : CRD catalogsources.operators.coreos.com not in use"
  fi
  
  CNTOPERGRP=`cat ${BACKUPDIR}/operatorgroups-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTOPERGRP} = '1' ]; then
+ if [ ${CNTOPERGRP} != '1' ]; then
  echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
   else 
  echo "INFO : CRD catalogsources.operators.coreos.com not in use"
  fi
  
  CNTOPROPR=`cat ${BACKUPDIR}/operators-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTOPROPR} = '1' ]; then
+ if [ ${CNTOPROPR} != "1" ]; then
  echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
   else 
  echo "INFO : CRD catalogsources.operators.coreos.com not in use"
  fi
  
  CNTSUBSR=`cat ${BACKUPDIR}/subscriptions-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTSUBSR} = '1' ]; then
+ if [ ${CNTSUBSR} != '1' ]; then
  echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
   else 
  echo "INFO : CRD catalogsources.operators.coreos.com not in use"
  fi
 }
 
-function DeleteOLM {
+function TestDeleteOLM {
 #####################################################################
 date +%x%t%T | awk '{print $2":"$1}' >> ${DELETELOG}
 
@@ -124,17 +124,17 @@ echo "Delete clusterrole aggregate-olm-edit [Y/N] ?"
 read question1answer
 
 if [ "$question1answer" !=  "${question1answer#[Yy]}" ]; then 
-  echo "INFO: Deleting clusterrole aggregate-olm-edit"
-    echo "Running ${KUBECTL} delete clusterrole aggregate-olm-edit" >> ${DELETELOG} 2>&1
+  echo "INFO: Test Deleting clusterrole aggregate-olm-edit"
+    echo "Running ${KUBECTL} get clusterrole aggregate-olm-edit" >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete clusterrole aggregate-olm-edit  >> ${DELETELOG} 2>&1
+    ${KUBECTL} get clusterrole aggregate-olm-edit  >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete clusterrole aggregate-olm-edit FAILED !"
+     echo "ERROR: ${KUBECTL} get clusterrole aggregate-olm-edit FAILED !"
       else
      echo "INFO: Successfully deleted"
     fi
   else 
- echo "NOT Deleting clusterrole aggregate-olm-edit ... exiting "
+ echo "NOT Test Deleting  clusterrole aggregate-olm-edit ... exiting "
  exit 1
 fi
 printf '\n'
@@ -153,17 +153,17 @@ echo "Delete clusterrole aggregate-olm-view [Y/N] ?"
 read question2answer
 
 if [ "$question2answer" !=  "${question2answer#[Yy]}" ]; then 
- echo "Deleting clusterrole aggregate-olm-view"
-    echo "Running ${KUBECTL} delete clusterrole aggregate-olm-view" >> ${DELETELOG} 2>&1
+ echo "Test Deleting clusterrole aggregate-olm-view"
+    echo "Running ${KUBECTL} get clusterrole aggregate-olm-view" >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete clusterrole aggregate-olm-view  >> ${DELETELOG} 2>&1
+    ${KUBECTL} get clusterrole aggregate-olm-view  >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete clusterrole aggregate-olm-view FAILED !"
+     echo "ERROR: ${KUBECTL} get clusterrole aggregate-olm-view FAILED !"
       else
      echo "INFO: Successfully deleted"
     fi
   else 
- echo "NOT Deleting clusterrole aggregate-olm-view ... exiting "
+ echo "NOT Test Deleting clusterrole aggregate-olm-view ... exiting "
  exit 1
 fi
 printf '\n'
@@ -182,17 +182,17 @@ echo "Delete deployment catalog-operator -n ibm-system [Y/N] ?"
 read question3answer
 
 if [ "$question3answer" !=  "${question3answer#[Yy]}" ]; then 
- echo "Deleting deploy catalog-operator -n ibm-system"
-    echo "Running ${KUBECTL} delete deployment catalog-operator -n ibm-system" >> ${DELETELOG} 2>&1
+ echo "Test Deleting  deploy catalog-operator -n ibm-system"
+    echo "Running ${KUBECTL} get deployment catalog-operator -n ibm-system" >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete deployment catalog-operator -n ibm-system >> ${DELETELOG} 2>&1
+    ${KUBECTL} get deployment catalog-operator -n ibm-system >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete deployment catalog-operator -n ibm-system FAILED !"
+     echo "ERROR: ${KUBECTL} get deployment catalog-operator -n ibm-system FAILED !"
       else
      echo "INFO: Successfully deleted"
     fi
   else 
- echo "NOT Deleting deployment catalog-operator -n ibm-system ... exiting "
+ echo "NOT Test Deleting  deployment catalog-operator -n ibm-system ... exiting "
  exit 1
 fi
 printf '\n'
@@ -211,17 +211,17 @@ echo "Delete deploymnet olm-operator -n ibm-system [Y/N] ?"
 read question4answer
 
 if [ "$question4answer" !=  "${question4answer#[Yy]}" ]; then 
- echo "Deleting deployment olm-operator -n ibm-system"
-     echo "Running ${KUBECTL} delete deployment olm-operator -n ibm-system " >> ${DELETELOG} 2>&1
+ echo "Test Deleting  deployment olm-operator -n ibm-system"
+     echo "Running ${KUBECTL} get deployment olm-operator -n ibm-system " >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete deployment  olm-operator  -n ibm-system >> ${DELETELOG} 2>&1
+    ${KUBECTL} get deployment  olm-operator  -n ibm-system >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete deployment  olm-operator -n ibm-system FAILED !"
+     echo "ERROR: ${KUBECTL} get deployment  olm-operator -n ibm-system FAILED !"
       else
      echo "INFO: Successfully deleted"
     fi
   else 
- echo "NOT Deleting deployment olm-operator -n ibm-system ... exiting "
+ echo "NOT Test Deleting  deployment olm-operator -n ibm-system ... exiting "
  exit 1
 fi
 printf '\n'
@@ -240,17 +240,17 @@ echo "Delete clusterrole system:controller:operator-lifecycle-manager [Y/N] ?"
 read question5answer
 
 if [ "$question5answer" !=  "${question5answer#[Yy]}" ]; then 
- echo "Deleting clusterrole system:controller:operator-lifecycle-manager"
-      echo "Running ${KUBECTL} delete clusterrole system:controller:operator-lifecycle-manager" >> ${DELETELOG} 2>&1
+ echo "Test Deleting  clusterrole system:controller:operator-lifecycle-manager"
+      echo "Running ${KUBECTL} get clusterrole system:controller:operator-lifecycle-manager" >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete clusterrole system:controller:operator-lifecycle-manager >> ${DELETELOG} 2>&1
+    ${KUBECTL} get clusterrole system:controller:operator-lifecycle-manager >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete clusterrole system:controller:operator-lifecycle-manager FAILED !"
+     echo "ERROR: ${KUBECTL} get clusterrole system:controller:operator-lifecycle-manager FAILED !"
       else
      echo "INFO: Successfully deleted"
     fi
   else 
- echo "NOT Deleting clusterrole system:controller:operator-lifecycle-manager ... exiting "
+ echo "NOT Test Deleting clusterrole system:controller:operator-lifecycle-manager ... exiting "
  exit 1
 fi
 printf '\n'
@@ -269,17 +269,17 @@ echo "Delete serviceaccount olm-operator-serviceaccount -n ibm-system [Y/N] ?"
 read question6answer
 
 if [ "$question6answer" !=  "${question6answer#[Yy]}" ]; then 
- echo "Deleting serviceaccount olm-operator-serviceaccount -n ibm-system"
-      echo "Running ${KUBECTL} delete serviceaccount olm-operator-serviceaccount -n ibm-system" >> ${DELETELOG} 2>&1
+ echo "Test Deleting serviceaccount olm-operator-serviceaccount -n ibm-system"
+      echo "Running ${KUBECTL} get serviceaccount olm-operator-serviceaccount -n ibm-system" >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete serviceaccount olm-operator-serviceaccount -n ibm-system >> ${DELETELOG} 2>&1
+    ${KUBECTL} get serviceaccount olm-operator-serviceaccount -n ibm-system >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete serviceaccount olm-operator-serviceaccount -n ibm-system FAILED !"
+     echo "ERROR: ${KUBECTL} get serviceaccount olm-operator-serviceaccount -n ibm-system FAILED !"
       else
      echo "INFO: Successfully deleted"
     fi
   else 
- echo "NOT Deleting serviceaccount olm-operator-serviceaccount -n ibm-system  ... exiting "
+ echo "NOT Test Deleting serviceaccount olm-operator-serviceaccount -n ibm-system  ... exiting "
  exit 1
 fi
 printf '\n' 
@@ -298,17 +298,17 @@ echo "Delete clusterrolebinding olm-operator-binding-ibm-system [Y/N] ?"
 read question7answer
 
 if [ "$question7answer" !=  "${question7answer#[Yy]}" ]; then 
- echo "Deleting clusterrolebinding olm-operator-binding-ibm-system"
-      echo "Running ${KUBECTL} delete clusterrolebinding olm-operator-binding-ibm-system " >> ${DELETELOG} 2>&1
+ echo "Test Deleting clusterrolebinding olm-operator-binding-ibm-system"
+      echo "Running ${KUBECTL} get clusterrolebinding olm-operator-binding-ibm-system " >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete clusterrolebinding olm-operator-binding-ibm-system >> ${DELETELOG} 2>&1
+    ${KUBECTL} get clusterrolebinding olm-operator-binding-ibm-system >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete clusterrolebinding olm-operator-binding-ibm-system !"
+     echo "ERROR: ${KUBECTL} get clusterrolebinding olm-operator-binding-ibm-system !"
       else
      echo "INFO: Successfully deleted"
     fi
   else 
- echo "NOT Deleting clusterrolebinding olm-operator-binding-ibm-system  ... exiting "
+ echo "NOT Test Deleting clusterrolebinding olm-operator-binding-ibm-system  ... exiting "
  exit 1
 fi
 printf '\n'
@@ -328,17 +328,17 @@ echo "Delete operatorgroup ibm-operators -n ibm-operators [Y/N] ?"
 read question8answer
 
 if [ "$question8answer" !=  "${question8answer#[Yy]}" ]; then 
- echo "Deleting operatorgroup ibm-operators -n ibm-operators"
-      echo "Running ${KUBECTL} operatorgroup ibm-operators -n ibm-operators" >> ${DELETELOG} 2>&1
+ echo "Test Deleting operatorgroup ibm-operators -n ibm-operators"
+      echo "Running ${KUBECTL} get operatorgroup ibm-operators -n ibm-operators" >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete operatorgroup ibm-operators -n ibm-operators >> ${DELETELOG} 2>&1
+    ${KUBECTL} get operatorgroup ibm-operators -n ibm-operators >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete operatorgroup ibm-operators -n ibm-operators !"
+     echo "ERROR: ${KUBECTL} get operatorgroup ibm-operators -n ibm-operators !"
       else
      echo "INFO: Successfully deleted"
     fi
   else 
- echo "NOT Deleting operatorgroup ibm-operators -n ibm-operators   ... exiting "
+ echo "NOT Test Deleting operatorgroup ibm-operators -n ibm-operators   ... exiting "
  exit 1
 fi
 printf '\n'
@@ -357,17 +357,17 @@ echo "Delete operatorgroup olm-operators -n ibm-system [Y/N] ?"
 read question9answer
 
 if [ "$question9answer" !=  "${question9answer#[Yy]}" ]; then 
- echo "Deleting operatorgroup olm-operators -n ibm-system"
-       echo "Running ${KUBECTL} delete operatorgroup olm-operators -n ibm-system " >> ${DELETELOG} 2>&1
+ echo "Test Deleting operatorgroup olm-operators -n ibm-system"
+       echo "Running ${KUBECTL} get operatorgroup olm-operators -n ibm-system " >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete operatorgroup olm-operators -n ibm-system  >> ${DELETELOG} 2>&1
+    ${KUBECTL} get operatorgroup olm-operators -n ibm-system  >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete operatorgroup ibm-operators -n ibm-operators !"
+     echo "ERROR: ${KUBECTL} get operatorgroup ibm-operators -n ibm-operators !"
       else
      echo "INFO: Successfully deleted"
     fi
   else 
- echo "NOT Deleting operatorgroup olm-operators -n ibm-system  ... exiting "
+ echo "NOT Test Deleting operatorgroup olm-operators -n ibm-system  ... exiting "
  exit 1
 fi
 printf '\n'
@@ -386,17 +386,17 @@ echo "Delete service catalog-operator-metrics -n ibm-system [Y/N] ?"
 read question10answer
 
 if [ "$question10answer" !=  "${question9answer#[Yy]}" ]; then 
- echo "Deleting service catalog-operator-metrics -n ibm-system"
-       echo "Running ${KUBECTL} delete service catalog-operator-metrics -n ibm-system " >> ${DELETELOG} 2>&1
+ echo "Test Deleting service catalog-operator-metrics -n ibm-system"
+       echo "Running ${KUBECTL} get service catalog-operator-metrics -n ibm-system " >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete service catalog-operator-metrics -n ibm-system  >> ${DELETELOG} 2>&1
+    ${KUBECTL} get service catalog-operator-metrics -n ibm-system  >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete service catalog-operator-metrics -n ibm-system !"
+     echo "ERROR: ${KUBECTL} get service catalog-operator-metrics -n ibm-system !"
       else
      echo "INFO: Successfully deleted"
     fi
   else 
- echo "NOT Deleting service catalog-operator-metrics -n ibm-system  ... exiting "
+ echo "NOT Test Deleting service catalog-operator-metrics -n ibm-system  ... exiting "
  exit 1
 fi
 printf '\n'
@@ -415,17 +415,17 @@ echo "Delete service olm-operator-metrics -n ibm-system [Y/N] ?"
 read question11answer
 
 if [ "$question11answer" !=  "${question11answer#[Yy]}" ]; then 
- echo "Deleting service olm-operator-metrics -n ibm-system"
-        echo "Running ${KUBECTL} delete service olm-operator-metrics -n ibm-system " >> ${DELETELOG} 2>&1
+ echo "Test Deleting service olm-operator-metrics -n ibm-system"
+        echo "Running ${KUBECTL} get service olm-operator-metrics -n ibm-system " >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete service olm-operator-metrics -n ibm-system >> ${DELETELOG} 2>&1
+    ${KUBECTL} get service olm-operator-metrics -n ibm-system >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete service olm-operator-metrics -n ibm-system !"
+     echo "ERROR: ${KUBECTL} get service olm-operator-metrics -n ibm-system !"
       else
      echo "INFO: Successfully deleted"
     fi
   else 
- echo "NOT Deleting service olm-operator-metrics -n ibm-system ... exiting "
+ echo "NOT Test Deleting service olm-operator-metrics -n ibm-system ... exiting "
  exit 1
 fi
 printf '\n'
@@ -449,17 +449,17 @@ echo "Delete CRD catalogsources.operators.coreos.com [Y/N] ?"
 read question12answer
 
 if [ "$question12answer" !=  "${question12answer#[Yy]}" ]; then 
- echo "Deleting CRD catalogsources.operators.coreos.com"
-        echo "Running ${KUBECTL} delete catalogsources.operators.coreos.com" >> ${DELETELOG} 2>&1
+ echo "Test Deleting CRD catalogsources.operators.coreos.com"
+        echo "Running ${KUBECTL} get catalogsources.operators.coreos.com" >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete crd catalogsources.operators.coreos.com >> ${DELETELOG} 2>&1
+    ${KUBECTL} get catalogsources.operators.coreos.com -A >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete catalogsources.operators.coreos.com !"
+     echo "ERROR: ${KUBECTL} get catalogsources.operators.coreos.com !"
       else
      echo "INFO: Successfully deleted"
     fi 
   else 
- echo "NOT Deleting CRD catalogsources.operators.coreos.com ... exiting "
+ echo "NOT Test Deleting CRD catalogsources.operators.coreos.com ... exiting "
  exit 1
 fi 
 printf '\n'
@@ -478,17 +478,17 @@ echo "Delete CRD clusterserviceversions.operators.coreos.com [Y/N] ?"
 read question13answer
 
 if [ "$question13answer" !=  "${question12answer#[Yy]}" ]; then 
- echo "Deleting CRD clusterserviceversions.operators.coreos.com "
-         echo "Running ${KUBECTL} delete crd clusterserviceversions.operators.coreos.com" >> ${DELETELOG} 2>&1
+ echo "Test Deleting CRD clusterserviceversions.operators.coreos.com "
+         echo "Running ${KUBECTL} get crd clusterserviceversions.operators.coreos.com" >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete crd clusterserviceversions.operators.coreos.com  >> ${DELETELOG} 2>&1
+    ${KUBECTL} get clusterserviceversions.operators.coreos.com -A >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete crd clusterserviceversions.operators.coreos.com  !"
+     echo "ERROR: ${KUBECTL} get clusterserviceversions.operators.coreos.com  !"
       else
      echo "INFO: Successfully deleted"
     fi 
   else 
- echo "NOT Deleting CRD clusterserviceversions.operators.coreos.com  ... exiting "
+ echo "NOT Test Deleting CRD clusterserviceversions.operators.coreos.com  ... exiting "
  exit 1
 fi 
 printf '\n'
@@ -507,17 +507,17 @@ echo "Delete CRD installplans.operators.coreos.com [Y/N] ?"
 read question14answer
 
 if [ "$question14answer" !=  "${question14answer#[Yy]}" ]; then 
- echo "Deleting CRD installplans.operators.coreos.com "
-         echo "Running ${KUBECTL} delete crd installplans.operators.coreos.com " >> ${DELETELOG} 2>&1
+ echo "Test Deleting CRD installplans.operators.coreos.com "
+         echo "Running ${KUBECTL} get installplans.operators.coreos.com " >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete crd installplans.operators.coreos.com >> ${DELETELOG} 2>&1
+    ${KUBECTL} get installplans.operators.coreos.com -A  >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete crd installplans.operators.coreos.com  !"
+     echo "ERROR: ${KUBECTL} get installplans.operators.coreos.com  !"
       else
      echo "INFO: Successfully deleted"
     fi 
   else 
- echo "NOT Deleting CRD installplans.operators.coreos.com ... exiting "
+ echo "NOT Test Deleting CRD installplans.operators.coreos.com ... exiting "
  exit 1
 fi 
 printf '\n'
@@ -536,17 +536,17 @@ echo "Delete CRD operatorgroups.operators.coreos.com [Y/N] ?"
 read question15answer
 
 if [ "$question15answer" !=  "${question15answer#[Yy]}" ]; then 
- echo "Deleting CRD operatorgroups.operators.coreos.com  "
-         echo "Running ${KUBECTL} delete crd operatorgroups.operators.coreos.com  " >> ${DELETELOG} 2>&1
+ echo "Test Deleting CRD operatorgroups.operators.coreos.com  "
+         echo "Running ${KUBECTL} get operatorgroups.operators.coreos.com " >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete crd operatorgroups.operators.coreos.com >> ${DELETELOG} 2>&1
+    ${KUBECTL} get operatorgroups.operators.coreos.com  -A  >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete crd operatorgroups.operators.coreos.com  !"
+     echo "ERROR: ${KUBECTL} get operatorgroups.operators.coreos.com  !"
       else
      echo "INFO: Successfully deleted"
     fi 
   else 
- echo "NOT Deleting CRD operatorgroups.operators.coreos.com  ... exiting "
+ echo "NOT Test Deleting CRD operatorgroups.operators.coreos.com  ... exiting "
  exit 1
 fi 
 printf '\n'
@@ -565,17 +565,17 @@ echo "Delete CRD operators.operators.coreos.com [Y/N] ?"
 read question16answer
 
 if [ "$question16answer" !=  "${question16answer#[Yy]}" ]; then 
- echo "Deleting CRD operators.operators.coreos.com  "
-         echo "Running ${KUBECTL} delete crd operators.operators.coreos.com   " >> ${DELETELOG} 2>&1
+ echo "Test Deleting CRD operators.operators.coreos.com  "
+         echo "Running ${KUBECTL} get operators.operators.coreos.com   " >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete crd operators.operators.coreos.com  >> ${DELETELOG} 2>&1
+    ${KUBECTL} get operators.operators.coreos.com  -A >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete crd operators.operators.coreos.com  !"
+     echo "ERROR: ${KUBECTL} get operators.operators.coreos.com  !"
       else
      echo "INFO: Successfully deleted"
     fi 
   else 
- echo "NOT Deleting CRD operators.operators.coreos.com  ... exiting "
+ echo "NOT Test Deleting CRD operators.operators.coreos.com  ... exiting "
  exit 1
 fi 
 printf '\n'
@@ -594,29 +594,30 @@ echo "Delete CRD subscriptions.operators.coreos.com [Y/N] ?"
 read question17answer
 
 if [ "$question17answer" !=  "${question17answer#[Yy]}" ]; then 
- echo "Deleting CRD subscriptions.operators.coreos.com"
-         echo "Running ${KUBECTL} delete crd subscriptions.operators.coreos.com" >> ${DELETELOG} 2>&1
+ echo "Test Deleting CRD subscriptions.operators.coreos.com"
+         echo "Running ${KUBECTL} get subscriptions.operators.coreos.com" >> ${DELETELOG} 2>&1
 # Delete object kubectl command below. Output and errors are directed to log file  
-    ${KUBECTL} delete crd subscriptions.operators.coreos.com  >> ${DELETELOG} 2>&1
+    ${KUBECTL} get subscriptions.operators.coreos.com  -A >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} delete crd subscriptions.operators.coreos.com !"
       else
      echo "INFO: Successfully deleted"
     fi 
   else 
- echo "NOT Deleting CRD subscriptions.operators.coreos.com ... exiting"
+ echo "NOT Test Deleting CRD subscriptions.operators.coreos.com ... exiting"
  exit 1
 fi   
 }
 printf '\n'
 ################################################# MAIN #######################################################
 
-echo "#########################################################"
-echo "#                                                       #"
-echo "#          Delete IBM IKS OLM Operator Objects          #"
-echo "#                                                       #"
-echo "#########################################################"
-echo "usage : bash delete-olm-operator.sh /path/to/backup"
+echo "######################################################################"
+echo "#                                                                    #"
+echo "#          Test Script Delete IBM IKS OLM Operator Objects           #"
+echo "#                                                                    #"
+echo "#    Script to test the delete functions in delete-olm-operator.sh   #"
+echo "######################################################################"
+echo "usage : bash test-delete-olm-operator.sh /path/to/backup"
 
 
 if [ ${AGENT_OS} != "Linux" ]; then
