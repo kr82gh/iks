@@ -111,29 +111,50 @@ ${KUBECTL} get service olm-operator-metrics -n ibm-system \
 
 function BackupCRD {
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get catalogsources.operators.coreos.com -A \
+${KUBECTL} get crd catalogsources.operators.coreos.com -A \
             -o=yaml >  ${BACKUPDIR}/catalogsources-operators-coreos-com.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get clusterserviceversions.operators.coreos.com -A \
+${KUBECTL} get crd clusterserviceversions.operators.coreos.com -A \
             -o=yaml >  ${BACKUPDIR}/clusterserviceversions-operators-coreos-com.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get installplans.operators.coreos.com -A \
+${KUBECTL} get crd installplans.operators.coreos.com -A \
             -o=yaml >  ${BACKUPDIR}/installplans-operators-coreos-com.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get operatorgroups.operators.coreos.com -A \
+${KUBECTL} get crd operatorgroups.operators.coreos.com -A \
             -o=yaml >  ${BACKUPDIR}/operatorgroups-operators-coreos-com.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get operators.operators.coreos.com -A \
+${KUBECTL} get crd operators.operators.coreos.com -A \
             -o=yaml >  ${BACKUPDIR}/operators-operators-coreos-com.yml  2>> ${BACKUPLOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
-${KUBECTL} get subscriptions.operators.coreos.com -A \
+${KUBECTL} get crd subscriptions.operators.coreos.com -A \
             -o=yaml >  ${BACKUPDIR}/subscriptions-operators-coreos-com.yml  2>> ${BACKUPLOG}    
 }
+
+
+function GetCRDDetails {
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get  catalogsources.operators.coreos.com -A  >  ${BACKUPDIR}/catalogsources-operators-coreos-com.txt  2>> ${BACKUPLOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get clusterserviceversions.operators.coreos.com -A >  ${BACKUPDIR}/clusterserviceversions-operators-coreos-com.txt  2>> ${BACKUPLOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get installplans.operators.coreos.com -A >  ${BACKUPDIR}/installplans-operators-coreos-com.txt  2>> ${BACKUPLOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get operatorgroups.operators.coreos.com -A >  ${BACKUPDIR}/operatorgroups-operators-coreos-com.txt  2>> ${BACKUPLOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get operators.operators.coreos.com -A >  ${BACKUPDIR}/operators-operators-coreos-com.txt  2>> ${BACKUPLOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get subscriptions.operators.coreos.com -A >  ${BACKUPDIR}/subscriptions-operators-coreos-com.txt  2>> ${BACKUPLOG}  
+
 
 ################################################# MAIN #######################################################
 
@@ -184,5 +205,12 @@ BackupCRD
 sleep 10
 if [ $? != "0" ]; then
  echo "ERROR : Failed to backup CRDs" 
+  exit 1
+fi
+cho "GetCRDDetails ----------------> Step 4 Cont: Get the details of each CR to determine if it is used."
+GetCRDDetails
+sleep 10
+if [ $? != "0" ]; then
+ echo "ERROR : Failed to get CRD details" 
   exit 1
 fi
