@@ -114,19 +114,19 @@ function GetCRDDetails {
 date +%x%t%T | awk '{print $2":"$1}' >> ${DELETELOG} 
 ${KUBECTL} get  catalogsources.operators.coreos.com -A  >  ${OUTPUTDIR}/catalogsources-operators-coreos-com.txt  2>> ${DELETELOG}
 sleep 10
-date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+date +%x%t%T | awk '{print $2":"$1}' >> ${DELETELOG} 
 ${KUBECTL} get clusterserviceversions.operators.coreos.com -A >  ${OUTPUTDIR}/clusterserviceversions-operators-coreos-com.txt  2>> ${DELETELOG}
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${DELETELOG} 
 ${KUBECTL} get installplans.operators.coreos.com -A >  ${OUTPUTDIR}/installplans-operators-coreos-com.txt  2>> ${DELETELOG}
 sleep 10
-date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+date +%x%t%T | awk '{print $2":"$1}' >> ${DELETELOG} 
 ${KUBECTL} get operatorgroups.operators.coreos.com -A >  ${OUTPUTDIR}/operatorgroups-operators-coreos-com.txt  2>> ${DELETELOG}
 sleep 10
-date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+date +%x%t%T | awk '{print $2":"$1}' >> ${DELETELOG} 
 ${KUBECTL} get operators.operators.coreos.com -A >  ${OUTPUTDIR}/operators-operators-coreos-com.txt  2>> ${DELETELOG}
 sleep 10
-date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+date +%x%t%T | awk '{print $2":"$1}' >> ${DELETELOG} 
 ${KUBECTL} get subscriptions.operators.coreos.com -A >  ${OUTPUTDIR}/subscriptions-operators-coreos-com.txt  2>> ${DELETELOG}  
 }
 
