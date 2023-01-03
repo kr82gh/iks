@@ -64,49 +64,118 @@ if [ ${KSCOUNT} != '0' ]; then
 fi
 }
 
-function OutputCRDdetails {
- CNTCATALOGSRC=`cat ${BACKUPDIR}/catalogsources-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTCATALOGSRC} != '1' ]; then
+function OutputCRDdetailsPreOLMDelete {
+echo "#################### Output of CRD check from backup test (backup-olm-operator.sh) #######################"
+ CNTCATALOGSRC=`cat ${BACKUPDIR}/catalogsources-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTCATALOGSRC} != '0' ]; then
  echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
   else 
  echo "INFO : CRD catalogsources.operators.coreos.com not in use"
  fi
  
- CNTSRVCVER=`cat ${BACKUPDIR}/clusterserviceversions-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTSRVCVER} != '1' ]; then
- echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
+ CNTSRVCVER=`cat ${BACKUPDIR}/clusterserviceversions-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTSRVCVER} != '0' ]; then
+ echo "WARN : CRD clusterserviceversions.operators.coreos.com IN USE"
   else 
- echo "INFO : CRD catalogsources.operators.coreos.com not in use"
+ echo "INFO : CRD clusterserviceversions.operators.coreos.com not in use"
  fi
  
- CNTINSTALLPLN=`cat ${BACKUPDIR}/installplans-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTINSTALLPLN} != '1' ]; then
- echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
+ CNTINSTALLPLN=`cat ${BACKUPDIR}/installplans-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTINSTALLPLN} != '0' ]; then
+ echo "WARN : CRD installplans.operators.coreos.com IN USE"
   else 
- echo "INFO : CRD catalogsources.operators.coreos.com not in use"
+ echo "INFO : CRD installplans.operators.coreos.com not in use"
  fi
  
- CNTOPERGRP=`cat ${BACKUPDIR}/operatorgroups-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTOPERGRP} != '1' ]; then
- echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
+ CNTOPERGRP=`cat ${BACKUPDIR}/operatorgroups-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTOPERGRP} != '0' ]; then
+ echo "WARN : CRD operatorgroups.operators.coreos.com IN USE"
   else 
- echo "INFO : CRD catalogsources.operators.coreos.com not in use"
+ echo "INFO : CRD operatorgroups.operators.coreos.com not in use"
  fi
  
- CNTOPROPR=`cat ${BACKUPDIR}/operators-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTOPROPR} != "1" ]; then
- echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
+ CNTOPROPR=`cat ${BACKUPDIR}/operators-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTOPROPR} != '0' ]; then
+ echo "WARN : CRD operators.operators.coreos.com IN USE"
   else 
- echo "INFO : CRD catalogsources.operators.coreos.com not in use"
+ echo "INFO : CRD operators.operators.coreos.com not in use"
  fi
  
- CNTSUBSR=`cat ${BACKUPDIR}/subscriptions-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTSUBSR} != '1' ]; then
- echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
+ CNTSUBSR=`cat ${BACKUPDIR}/subscriptions-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTSUBSR} != '0' ]; then
+ echo "WARN : CRD subscriptions.operators.coreos.com IN USE"
   else 
- echo "INFO : CRD catalogsources.operators.coreos.com not in use"
+ echo "INFO : CRD subscriptions.operators.coreos.com not in use"
  fi
 }
+
+function GetCRDDetails {
+  echo "#################### Output of CRD Details  #######################"
+date +%x%t%T | awk '{print $2":"$1}' >> ${DELETELOG} 
+${KUBECTL} get  catalogsources.operators.coreos.com -A  >  ${OUTPUTDIR}/catalogsources-operators-coreos-com.txt  2>> ${DELETELOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get clusterserviceversions.operators.coreos.com -A >  ${OUTPUTDIR}/clusterserviceversions-operators-coreos-com.txt  2>> ${DELETELOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${DELETELOG} 
+${KUBECTL} get installplans.operators.coreos.com -A >  ${OUTPUTDIR}/installplans-operators-coreos-com.txt  2>> ${DELETELOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get operatorgroups.operators.coreos.com -A >  ${OUTPUTDIR}/operatorgroups-operators-coreos-com.txt  2>> ${DELETELOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get operators.operators.coreos.com -A >  ${OUTPUTDIR}/operators-operators-coreos-com.txt  2>> ${DELETELOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get subscriptions.operators.coreos.com -A >  ${OUTPUTDIR}/subscriptions-operators-coreos-com.txt  2>> ${DELETELOG}  
+}
+
+
+function OutputCRDdetails {
+echo "#################### Output of CRD check from backup test (backup-olm-operator.sh) #######################"
+ CNTCATALOGSRC=`cat ${OUTPUTDIR}/catalogsources-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTCATALOGSRC} != '0' ]; then
+ echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
+  else 
+ echo "INFO : CRD catalogsources.operators.coreos.com not in use"
+ fi
+ 
+ CNTSRVCVER=`cat ${OUTPUTDIR}/clusterserviceversions-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTSRVCVER} != '0' ]; then
+ echo "WARN : CRD clusterserviceversions.operators.coreos.com IN USE"
+  else 
+ echo "INFO : CRD clusterserviceversions.operators.coreos.com not in use"
+ fi
+ 
+ CNTINSTALLPLN=`cat ${OUTPUTDIR}/installplans-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTINSTALLPLN} != '0' ]; then
+ echo "WARN : CRD installplans.operators.coreos.com IN USE"
+  else 
+ echo "INFO : CRD installplans.operators.coreos.com not in use"
+ fi
+ 
+ CNTOPERGRP=`cat ${OUTPUTDIR}/operatorgroups-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTOPERGRP} != '0' ]; then
+ echo "WARN : CRD operatorgroups.operators.coreos.com IN USE"
+  else 
+ echo "INFO : CRD operatorgroups.operators.coreos.com not in use"
+ fi
+ 
+ CNTOPROPR=`cat ${OUTPUTDIR}/operators-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTOPROPR} != '0' ]; then
+ echo "WARN : CRD operators.operators.coreos.com IN USE"
+  else 
+ echo "INFO : CRD operators.operators.coreos.com not in use"
+ fi
+ 
+ CNTSUBSR=`cat ${OUTPUTDIR}/subscriptions-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTSUBSR} != '0' ]; then
+ echo "WARN : CRD subscriptions.operators.coreos.com IN USE"
+  else 
+ echo "INFO : CRD subscriptions.operators.coreos.com not in use"
+ fi
+}
+
 
 function TestDeleteOLM {
 #####################################################################
@@ -131,7 +200,7 @@ if [ "$question1answer" !=  "${question1answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get clusterrole aggregate-olm-edit FAILED !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi
   else 
  echo "NOT Test Deleting  clusterrole aggregate-olm-edit ... exiting "
@@ -160,7 +229,7 @@ if [ "$question2answer" !=  "${question2answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get clusterrole aggregate-olm-view FAILED !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi
   else 
  echo "NOT Test Deleting clusterrole aggregate-olm-view ... exiting "
@@ -189,7 +258,7 @@ if [ "$question3answer" !=  "${question3answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get deployment catalog-operator -n ibm-system FAILED !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi
   else 
  echo "NOT Test Deleting  deployment catalog-operator -n ibm-system ... exiting "
@@ -218,7 +287,7 @@ if [ "$question4answer" !=  "${question4answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get deployment  olm-operator -n ibm-system FAILED !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi
   else 
  echo "NOT Test Deleting  deployment olm-operator -n ibm-system ... exiting "
@@ -247,7 +316,7 @@ if [ "$question5answer" !=  "${question5answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get clusterrole system:controller:operator-lifecycle-manager FAILED !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi
   else 
  echo "NOT Test Deleting clusterrole system:controller:operator-lifecycle-manager ... exiting "
@@ -276,7 +345,7 @@ if [ "$question6answer" !=  "${question6answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get serviceaccount olm-operator-serviceaccount -n ibm-system FAILED !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi
   else 
  echo "NOT Test Deleting serviceaccount olm-operator-serviceaccount -n ibm-system  ... exiting "
@@ -305,7 +374,7 @@ if [ "$question7answer" !=  "${question7answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get clusterrolebinding olm-operator-binding-ibm-system !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi
   else 
  echo "NOT Test Deleting clusterrolebinding olm-operator-binding-ibm-system  ... exiting "
@@ -335,7 +404,7 @@ if [ "$question8answer" !=  "${question8answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get operatorgroup ibm-operators -n ibm-operators !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi
   else 
  echo "NOT Test Deleting operatorgroup ibm-operators -n ibm-operators   ... exiting "
@@ -364,7 +433,7 @@ if [ "$question9answer" !=  "${question9answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get operatorgroup ibm-operators -n ibm-operators !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi
   else 
  echo "NOT Test Deleting operatorgroup olm-operators -n ibm-system  ... exiting "
@@ -393,7 +462,7 @@ if [ "$question10answer" !=  "${question9answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get service catalog-operator-metrics -n ibm-system !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi
   else 
  echo "NOT Test Deleting service catalog-operator-metrics -n ibm-system  ... exiting "
@@ -422,7 +491,7 @@ if [ "$question11answer" !=  "${question11answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get service olm-operator-metrics -n ibm-system !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi
   else 
  echo "NOT Test Deleting service olm-operator-metrics -n ibm-system ... exiting "
@@ -433,7 +502,7 @@ printf '\n'
 }
 
 
-function DeleteCRD {
+function TestDeleteCRD {
 #####################################################################
 date +%x%t%T | awk '{print $2":"$1}' >> ${DELETELOG}
 
@@ -456,7 +525,7 @@ if [ "$question12answer" !=  "${question12answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get catalogsources.operators.coreos.com !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi 
   else 
  echo "NOT Test Deleting CRD catalogsources.operators.coreos.com ... exiting "
@@ -485,7 +554,7 @@ if [ "$question13answer" !=  "${question12answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get clusterserviceversions.operators.coreos.com  !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi 
   else 
  echo "NOT Test Deleting CRD clusterserviceversions.operators.coreos.com  ... exiting "
@@ -514,7 +583,7 @@ if [ "$question14answer" !=  "${question14answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get installplans.operators.coreos.com  !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi 
   else 
  echo "NOT Test Deleting CRD installplans.operators.coreos.com ... exiting "
@@ -543,7 +612,7 @@ if [ "$question15answer" !=  "${question15answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get operatorgroups.operators.coreos.com  !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi 
   else 
  echo "NOT Test Deleting CRD operatorgroups.operators.coreos.com  ... exiting "
@@ -572,7 +641,7 @@ if [ "$question16answer" !=  "${question16answer#[Yy]}" ]; then
     if [ $? != '0' ]; then
      echo "ERROR: ${KUBECTL} get operators.operators.coreos.com  !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi 
   else 
  echo "NOT Test Deleting CRD operators.operators.coreos.com  ... exiting "
@@ -599,9 +668,9 @@ if [ "$question17answer" !=  "${question17answer#[Yy]}" ]; then
 # Delete object kubectl command below. Output and errors are directed to log file  
     ${KUBECTL} get subscriptions.operators.coreos.com  -A >> ${DELETELOG} 2>&1
     if [ $? != '0' ]; then
-     echo "ERROR: ${KUBECTL} delete crd subscriptions.operators.coreos.com !"
+     echo "ERROR: ${KUBECTL} get subscriptions.operators.coreos.com !"
       else
-     echo "INFO: Successfully deleted"
+     echo "INFO: Successfully test deleted"
     fi 
   else 
  echo "NOT Test Deleting CRD subscriptions.operators.coreos.com ... exiting"
@@ -664,7 +733,9 @@ echo "GetOLMAddons -----> Step 2 : If the OLM operator is installed in your clus
 GetOLMAddons
 sleep 10
 echo "DeleteOLM -----------> Step 3 : If you determined that OLM is not used by the Istio add-on or any additional operators, run each command below individually to delete OLM resources."
-DeleteOLM
+TestDeleteOLM
 echo "DeleteCRD ----------------> Step 4 : If you determined that OLM is not used by the Istio add-on or any additional operators, delete any unused custom resource definitions (CRD) that were installed by OLM."
+OutputCRDdetailsPreOLMDelete
+GetCRDDetails
 OutputCRDdetails
-DeleteCRD
+TestDeleteCRD

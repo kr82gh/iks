@@ -154,7 +154,7 @@ ${KUBECTL} get operators.operators.coreos.com -A >  ${BACKUPDIR}/operators-opera
 sleep 10
 date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
 ${KUBECTL} get subscriptions.operators.coreos.com -A >  ${BACKUPDIR}/subscriptions-operators-coreos-com.txt  2>> ${BACKUPLOG}  
-
+}
 
 ################################################# MAIN #######################################################
 
@@ -207,7 +207,7 @@ if [ $? != "0" ]; then
  echo "ERROR : Failed to backup CRDs" 
   exit 1
 fi
-cho "GetCRDDetails ----------------> Step 4 Cont: Get the details of each CR to determine if it is used."
+echo "GetCRDDetails ----------------> Step 4 Cont: Get the details of each CR to determine if it is used."
 GetCRDDetails
 sleep 10
 if [ $? != "0" ]; then

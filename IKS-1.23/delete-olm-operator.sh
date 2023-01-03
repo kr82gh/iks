@@ -64,49 +64,118 @@ if [ ${KSCOUNT} != '0' ]; then
 fi
 }
 
-function OutputCRDdetails {
- CNTCATALOGSRC=`cat ${BACKUPDIR}/catalogsources-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTCATALOGSRC} = '1' ]; then
+function OutputCRDdetailsPreOLMDelete {
+echo "#################### Output of CRD check from backup test (backup-olm-operator.sh) #######################"
+ CNTCATALOGSRC=`cat ${BACKUPDIR}/catalogsources-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTCATALOGSRC} != '0' ]; then
  echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
   else 
  echo "INFO : CRD catalogsources.operators.coreos.com not in use"
  fi
  
- CNTSRVCVER=`cat ${BACKUPDIR}/clusterserviceversions-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTSRVCVER} = '1' ]; then
- echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
+ CNTSRVCVER=`cat ${BACKUPDIR}/clusterserviceversions-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTSRVCVER} != '0' ]; then
+ echo "WARN : CRD clusterserviceversions.operators.coreos.com IN USE"
   else 
- echo "INFO : CRD catalogsources.operators.coreos.com not in use"
+ echo "INFO : CRD clusterserviceversions.operators.coreos.com not in use"
  fi
  
- CNTINSTALLPLN=`cat ${BACKUPDIR}/installplans-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTINSTALLPLN} = '1' ]; then
- echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
+ CNTINSTALLPLN=`cat ${BACKUPDIR}/installplans-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTINSTALLPLN} != '0' ]; then
+ echo "WARN : CRD installplans.operators.coreos.com IN USE"
   else 
- echo "INFO : CRD catalogsources.operators.coreos.com not in use"
+ echo "INFO : CRD installplans.operators.coreos.com not in use"
  fi
  
- CNTOPERGRP=`cat ${BACKUPDIR}/operatorgroups-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTOPERGRP} = '1' ]; then
- echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
+ CNTOPERGRP=`cat ${BACKUPDIR}/operatorgroups-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTOPERGRP} != '0' ]; then
+ echo "WARN : CRD operatorgroups.operators.coreos.com IN USE"
   else 
- echo "INFO : CRD catalogsources.operators.coreos.com not in use"
+ echo "INFO : CRD operatorgroups.operators.coreos.com not in use"
  fi
  
- CNTOPROPR=`cat ${BACKUPDIR}/operators-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTOPROPR} = '1' ]; then
- echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
+ CNTOPROPR=`cat ${BACKUPDIR}/operators-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTOPROPR} != '0' ]; then
+ echo "WARN : CRD operators.operators.coreos.com IN USE"
   else 
- echo "INFO : CRD catalogsources.operators.coreos.com not in use"
+ echo "INFO : CRD operators.operators.coreos.com not in use"
  fi
  
- CNTSUBSR=`cat ${BACKUPDIR}/subscriptions-operators-coreos-com.txt | egrep "No resources found." | wc -l`
- if [ ${CNTSUBSR} = '1' ]; then
- echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
+ CNTSUBSR=`cat ${BACKUPDIR}/subscriptions-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTSUBSR} != '0' ]; then
+ echo "WARN : CRD subscriptions.operators.coreos.com IN USE"
   else 
- echo "INFO : CRD catalogsources.operators.coreos.com not in use"
+ echo "INFO : CRD subscriptions.operators.coreos.com not in use"
  fi
 }
+
+function GetCRDDetails {
+  echo "#################### Output of CRD Details  #######################"
+date +%x%t%T | awk '{print $2":"$1}' >> ${DELETELOG} 
+${KUBECTL} get  catalogsources.operators.coreos.com -A  >  ${OUTPUTDIR}/catalogsources-operators-coreos-com.txt  2>> ${DELETELOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get clusterserviceversions.operators.coreos.com -A >  ${OUTPUTDIR}/clusterserviceversions-operators-coreos-com.txt  2>> ${DELETELOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${DELETELOG} 
+${KUBECTL} get installplans.operators.coreos.com -A >  ${OUTPUTDIR}/installplans-operators-coreos-com.txt  2>> ${DELETELOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get operatorgroups.operators.coreos.com -A >  ${OUTPUTDIR}/operatorgroups-operators-coreos-com.txt  2>> ${DELETELOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get operators.operators.coreos.com -A >  ${OUTPUTDIR}/operators-operators-coreos-com.txt  2>> ${DELETELOG}
+sleep 10
+date +%x%t%T | awk '{print $2":"$1}' >> ${BACKUPLOG} 
+${KUBECTL} get subscriptions.operators.coreos.com -A >  ${OUTPUTDIR}/subscriptions-operators-coreos-com.txt  2>> ${DELETELOG}  
+}
+
+
+function OutputCRDdetails {
+echo "#################### Output of CRD check from backup test (backup-olm-operator.sh) #######################"
+ CNTCATALOGSRC=`cat ${OUTPUTDIR}/catalogsources-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTCATALOGSRC} != '0' ]; then
+ echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
+  else 
+ echo "INFO : CRD catalogsources.operators.coreos.com not in use"
+ fi
+ 
+ CNTSRVCVER=`cat ${OUTPUTDIR}/clusterserviceversions-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTSRVCVER} != '0' ]; then
+ echo "WARN : CRD clusterserviceversions.operators.coreos.com IN USE"
+  else 
+ echo "INFO : CRD clusterserviceversions.operators.coreos.com not in use"
+ fi
+ 
+ CNTINSTALLPLN=`cat ${OUTPUTDIR}/installplans-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTINSTALLPLN} != '0' ]; then
+ echo "WARN : CRD installplans.operators.coreos.com IN USE"
+  else 
+ echo "INFO : CRD installplans.operators.coreos.com not in use"
+ fi
+ 
+ CNTOPERGRP=`cat ${OUTPUTDIR}/operatorgroups-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTOPERGRP} != '0' ]; then
+ echo "WARN : CRD operatorgroups.operators.coreos.com IN USE"
+  else 
+ echo "INFO : CRD operatorgroups.operators.coreos.com not in use"
+ fi
+ 
+ CNTOPROPR=`cat ${OUTPUTDIR}/operators-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTOPROPR} != '0' ]; then
+ echo "WARN : CRD operators.operators.coreos.com IN USE"
+  else 
+ echo "INFO : CRD operators.operators.coreos.com not in use"
+ fi
+ 
+ CNTSUBSR=`cat ${OUTPUTDIR}/subscriptions-operators-coreos-com.txt | egrep "No resources found" | wc -l`
+ if [ ${CNTSUBSR} != '0' ]; then
+ echo "WARN : CRD subscriptions.operators.coreos.com IN USE"
+  else 
+ echo "INFO : CRD subscriptions.operators.coreos.com not in use"
+ fi
+}
+
 
 function DeleteOLM {
 #####################################################################
@@ -665,5 +734,7 @@ sleep 10
 echo "DeleteOLM -----------> Step 3 : If you determined that OLM is not used by the Istio add-on or any additional operators, run each command below individually to delete OLM resources."
 DeleteOLM
 echo "DeleteCRD ----------------> Step 4 : If you determined that OLM is not used by the Istio add-on or any additional operators, delete any unused custom resource definitions (CRD) that were installed by OLM."
+OutputCRDdetailsPreOLMDelete
+GetCRDDetails
 OutputCRDdetails
 DeleteCRD
