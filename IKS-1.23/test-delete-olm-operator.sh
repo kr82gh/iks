@@ -43,7 +43,7 @@ fi
 function GetOLMAddons {
 # Check for Rancher local dev
 if [ ${K8SENV} != "Rancher" ]; then
-echo "DEBUG : Running - 'grep -A 1  Name ${OUTPUTDIR}/${CLUSTERID}-addons.txt| egrep '^Name.*' |  wc -l' >> ${DELETELOG} 2>&1" 
+echo "DEBUG : Running - 'grep -A 1  Name ${OUTPUTDIR}/${CLUSTERID}-addons.txt| egrep -v '^Name.*' |  wc -l' >> ${DELETELOG} 2>&1" 
 ibmcloud ks cluster addons -c ${CLUSTERID} > ${OUTPUTDIR}/${CLUSTERID}-addons.txt
 if [ -f ${OUTPUTDIR}/${CLUSTERID}-addons.txt ]; then
    echo "DEBUG : ${OUTPUTDIR}/${CLUSTERID}-addons.txt exists" >> ${DELETELOG} 2>&1 
@@ -51,7 +51,7 @@ if [ -f ${OUTPUTDIR}/${CLUSTERID}-addons.txt ]; then
    echo "ERROR : ${OUTPUTDIR}/${CLUSTERID}-addons.txt DOES NOT EXIST !" 
  exit 1
 fi
-KSCOUNT=`grep -A 1  Name ${OUTPUTDIR}/${CLUSTERID}-addons.txt| egrep '^Name.*' |  wc -l`
+KSCOUNT=`grep -A 1  Name ${OUTPUTDIR}/${CLUSTERID}-addons.txt| egrep -v '^Name.*' |  wc -l`
  else
 KSCOUNT="0"
 fi 
@@ -65,7 +65,7 @@ fi
 }
 
 function OutputCRDdetailsPreOLMDelete {
-echo "#################### Output of CRD check from backup test (backup-olm-operator.sh) #######################"
+echo "--------------------------! Output of CRD check prior to OLM delete. This from backup files (backup-olm-operator.sh) !-----------------------------"
  CNTCATALOGSRC=`cat ${BACKUPDIR}/catalogsources-operators-coreos-com.txt | egrep "No resources found" | wc -l`
  if [ ${CNTCATALOGSRC} != '0' ]; then
  echo "WARN : CRD catalogsources.operators.coreos.com IN USE"
@@ -132,7 +132,7 @@ ${KUBECTL} get subscriptions.operators.coreos.com -A >  ${OUTPUTDIR}/subscriptio
 
 
 function OutputCRDdetails {
-echo "#################### Output of CRD check from backup test (backup-olm-operator.sh) #######################"
+echo "-----------------------------! Getting CRD current output state !-------------------------------------"
  CNTCATALOGSRC=`cat ${OUTPUTDIR}/catalogsources-operators-coreos-com.txt | egrep "No resources found" | wc -l`
  if [ ${CNTCATALOGSRC} != '0' ]; then
  echo "WARN : CRD catalogsources.operators.coreos.com IN USE"

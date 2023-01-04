@@ -42,7 +42,7 @@ fi
 function GetOLMAddons {
 # Check for Rancher local dev
 if [ ${K8SENV} != "Rancher" ]; then
-echo "DEBUG : Running - 'grep -A 1  Name ${BACKUPDIR}/${CLUSTERID}-addons.txt| egrep '^Name.*' |  wc -l' >> ${BACKUPLOG} 2>&1" 
+echo "DEBUG : Running - 'grep -A 1  Name ${BACKUPDIR}/${CLUSTERID}-addons.txt| egrep -v '^Name.*' |  wc -l' >> ${BACKUPLOG} 2>&1" 
 ibmcloud ks cluster addons -c ${CLUSTERID} > ${BACKUPDIR}/${CLUSTERID}-addons.txt
 if [ -f ${BACKUPDIR}/${CLUSTERID}-addons.txt ]; then
    echo "DEBUG : ${BACKUPDIR}/${CLUSTERID}-addons.txt exists" >> ${BACKUPLOG} 2>&1 
@@ -50,7 +50,7 @@ if [ -f ${BACKUPDIR}/${CLUSTERID}-addons.txt ]; then
    echo "ERROR : ${BACKUPDIR}/${CLUSTERID}-addons.txt DOES NOT EXIST !" 
  exit 1
 fi
-KSCOUNT=`grep -A 1  Name ${BACKUPDIR}/${CLUSTERID}-addons.txt| egrep '^Name.*' |  wc -l`
+KSCOUNT=`grep -A 1  Name ${BACKUPDIR}/${CLUSTERID}-addons.txt| egrep -v '^Name.*' |  wc -l`
  else
 KSCOUNT="0"
 fi 
