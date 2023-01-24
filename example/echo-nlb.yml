@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    run: webserver                               
+  name: webserver-lb
+spec:
+  type: LoadBalancer
+  selector:
+    run: webserver
+  ports:
+  - name: webserver-port
+    protocol: TCP
+    port: 8080
+    targetPort: 8080 # Optional. By default, the `targetPort` is set to match the `port` value unless specified otherwise.
