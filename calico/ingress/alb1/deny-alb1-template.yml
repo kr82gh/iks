@@ -1,0 +1,30 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: deny-all-to-alb1
+spec:
+  applyOnForward: true
+  preDNAT: true
+  ingress:
+  - action: Deny
+    destination:
+      nets:
+      - NLB_OR_ALB_IP_CIDR
+      ports:
+      - 80
+      - 443
+    protocol: TCP
+    source: {}
+  - action: Deny
+    destination:
+      nets:
+      - NLB_OR_ALB_IP_CIDR
+      ports:
+      - 80
+      - 443
+    protocol: UDP
+    source: {}
+  selector: ibm.role == 'worker_public'
+  order: 800
+  types:
+  - Ingress
