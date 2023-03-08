@@ -1,0 +1,107 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-wh-to-alb1
+spec:
+  applyOnForward: true
+  preDNAT: true
+  ingress:
+  - action: Allow
+    destination:
+      nets:
+      - NLB_OR_ALB_IP_CIDR
+      ports:
+      - 80
+      - 443
+    protocol: TCP
+    source:
+      nets:
+      - CLIENT_1_RANGE
+      - CLIENT_2_RANGE
+      - CLIENT_3_RANGE
+      - CLIENT_4_RANGE
+      - CLIENT_5_RANGE
+      - CLIENT_6_RANGE
+      - CLIENT_7_RANGE
+      - CLIENT_8_RANGE
+      - CLIENT_9_RANGE
+      - CLIENT_10_RANGE
+      - CLIENT_11_RANGE
+      - CLIENT_12_RANGE
+      - CLIENT_13_RANGE
+      - CLIENT_14_RANGE
+      - CLIENT_15_RANGE
+      - CLIENT_16_RANGE
+      - CLIENT_17_RANGE
+      - CLIENT_18_RANGE
+      - CLIENT_19_RANGE
+      - CLIENT_20_RANGE
+      - CLIENT_21_RANGE
+      - CLIENT_22_RANGE
+      - CLIENT_23_RANGE
+      - CLIENT_24_RANGE
+      - CLIENT_25_RANGE
+      - CLIENT_26_RANGE
+      - CLIENT_27_RANGE
+      - CLIENT_28_RANGE
+      - CLIENT_29_RANGE
+      - CLIENT_30_RANGE
+      - CLIENT_31_RANGE
+      - CLIENT_32_RANGE
+      - CLIENT_33_RANGE
+      - CLIENT_34_RANGE
+      - CLIENT_35_RANGE
+      - CLIENT_36_RANGE
+      - CLIENT_37_RANGE
+      - CLIENT_38_RANGE
+      - CLIENT_39_RANGE
+      - CLIENT_40_RANGE
+      - CLIENT_41_RANGE
+      - CLIENT_42_RANGE
+      - CLIENT_43_RANGE
+      - CLIENT_44_RANGE
+      - CLIENT_45_RANGE
+      - CLIENT_46_RANGE
+      - CLIENT_47_RANGE
+      - CLIENT_48_RANGE
+      - CLIENT_49_RANGE
+      - CLIENT_50_RANGE
+      - CLIENT_51_RANGE
+      - CLIENT_52_RANGE
+      - CLIENT_53_RANGE
+      - CLIENT_54_RANGE
+      - CLIENT_55_RANGE
+      - CLIENT_56_RANGE
+      - CLIENT_57_RANGE
+      - CLIENT_58_RANGE
+      - CLIENT_59_RANGE
+      - CLIENT_60_RANGE
+      - CLIENT_61_RANGE
+      - CLIENT_62_RANGE
+      - CLIENT_63_RANGE
+      - CLIENT_64_RANGE
+      - CLIENT_65_RANGE
+      - CLIENT_66_RANGE
+      - CLIENT_67_RANGE
+      - CLIENT_68_RANGE
+      - CLIENT_69_RANGE
+      - CLIENT_70_RANGE
+      - CLIENT_71_RANGE
+      - CLIENT_72_RANGE
+      - CLIENT_73_RANGE
+      - CLIENT_74_RANGE
+      - CLIENT_75_RANGE
+      - CLIENT_76_RANGE
+      - CLIENT_77_RANGE
+      - CLIENT_78_RANGE
+      - CLIENT_79_RANGE
+      - CLIENT_80_RANGE
+      - CLIENT_81_RANGE
+      - CLIENT_82_RANGE
+      - CLIENT_83_RANGE
+      - CLIENT_84_RANGE
+      - CLIENT_85_RANGE
+  selector: ibm.role == 'worker_public'
+  order: 500
+  types:
+  - Ingress

@@ -1,0 +1,30 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-wh-to-alb1
+spec:
+  applyOnForward: true
+  preDNAT: true
+  ingress:
+  - action: Allow
+    destination:
+      nets:
+      - NLB_OR_ALB_IP_CIDR
+      ports:
+      - 80
+      - 443
+    protocol: TCP
+    source:
+      nets:
+      - CLIENT_1_RANGE
+      - CLIENT_2_RANGE
+      - CLIENT_3_RANGE
+      - CLIENT_4_RANGE
+      - CLIENT_5_RANGE
+      - CLIENT_6_RANGE
+      - CLIENT_7_RANGE
+      - CLIENT_8_RANGE
+  selector: ibm.role == 'worker_public'
+  order: 500
+  types:
+  - Ingress
